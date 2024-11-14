@@ -21,15 +21,15 @@ Somos parte del  equipo de seguridad de una empresa que necesita proteger su sis
    openssl rand -hex 64 -out clave_simetrica.hex
 ### Generar un par de claves asimétricas (pública y privada) para cada usuario
 
-- Cada usuario (por ejemplo, Alice y Bob) debe tener su propio par de claves para firmar y verificar los mensajes.
-- Genera el par de claves RSA de 2048 bits para Alice y guárdalos en los archivos `alice_privada.pem` y `alice_publica.pem`.
+- Cada usuario (Bonilla y Ruben) debe tener su propio par de claves para firmar y verificar los mensajes.
+- Genera el par de claves RSA de 2048 bits para Bonilla y guárdalos en los archivos `bonilla_privada.pem` y `bonilla_publica.pem`.
 
     ```bash
-    openssl genpkey -algorithm RSA -out alice_privada.pem -pkeyopt rsa_keygen_bits:2048
-    openssl rsa -pubout -in alice_privada.pem -out alice_publica.pem
+    openssl genpkey -algorithm RSA -out bonilla_privada.pem -pkeyopt rsa_keygen_bits:2048
+    openssl rsa -pubout -in bonilla_privada.pem -out bonilla_publica.pem
     ```
 
-- Repite los pasos anteriores para Bob, guardando sus claves en `bob_privada.pem` y `bob_publica.pem`.
+- Repite los pasos anteriores para Ruben, guardando sus claves en `ruben_privada.pem` y `ruben_publica.pem`.
 
 ---
 
@@ -37,7 +37,7 @@ Somos parte del  equipo de seguridad de una empresa que necesita proteger su sis
 
 #### Cifrar un mensaje
 
-- Crea un mensaje en un archivo llamado `mensaje.txt` con el texto “Confidencial: Proyecto secreto”.
+- Crea un mensaje en un archivo llamado `mensaje.txt` con el texto “Mensaje para Rubencito con Samba”.
 - Utiliza la clave simétrica generada en la Parte 1 para cifrar el mensaje usando AES-256-CBC, y guarda el mensaje cifrado en `mensaje_cifrado.enc`.
 
     ```bash
@@ -46,19 +46,19 @@ Somos parte del  equipo de seguridad de una empresa que necesita proteger su sis
 
 #### Firmar el mensaje cifrado
 
-- Usa la clave privada de Alice (`alice_privada.pem`) para crear una firma digital del mensaje cifrado.
+- Usa la clave privada de Bonilla (`bonilla_privada.pem`) para crear una firma digital del mensaje cifrado.
 - Almacena la firma en un archivo llamado `firma_mensaje.bin`.
 
     ```bash
-    openssl dgst -sha256 -sign alice_privada.pem -out firma_mensaje.bin mensaje_cifrado.enc
+    openssl dgst -sha256 -sign bonilla_privada.pem -out firma_mensaje.bin mensaje_cifrado.enc
     ```
 
 #### Compartir la clave simétrica de forma segura
 
-- Cifra el archivo `clave_simetrica.hex` con la clave pública de Bob para que solo él pueda descifrarla. Guarda el resultado en `clave_simetrica_cifrada.enc`.
+- Cifra el archivo `clave_simetrica.hex` con la clave pública de Ruben para que solo él pueda descifrarla. Guarda el resultado en `clave_simetrica_cifrada.enc`.
 
     ```bash
-    openssl rsautl -encrypt -inkey bob_publica.pem -pubin -in clave_simetrica.hex -out clave_simetrica_cifrada.enc
+    openssl rsautl -encrypt -inkey ruben_publica.pem -pubin -in clave_simetrica.hex -out clave_simetrica_cifrada.enc
     ```
 
 ---
@@ -67,27 +67,27 @@ Somos parte del  equipo de seguridad de una empresa que necesita proteger su sis
 
 #### Descifrar la clave simétrica
 
-- Bob recibe `clave_simetrica_cifrada.enc` y usa su clave privada (`bob_privada.pem`) para descifrar la clave simétrica y guardarla en `clave_simetrica_bob.hex`.
+- Ruben recibe `clave_simetrica_cifrada.enc` y usa su clave privada (`ruben_privada.pem`) para descifrar la clave simétrica y guardarla en `clave_simetrica_ruben.hex`.
 
     ```bash
-    openssl rsautl -decrypt -inkey bob_privada.pem -in clave_simetrica_cifrada.enc -out clave_simetrica_bob.hex
+    openssl rsautl -decrypt -inkey ruben_privada.pem -in clave_simetrica_cifrada.enc -out clave_simetrica_ruben.hex
     ```
 
 #### Descifrar el mensaje
 
-- Con la clave simétrica descifrada, Bob puede descifrar el mensaje original usando AES-256-CBC, y guarda el mensaje en `mensaje_descifrado.txt`.
+- Con la clave simétrica descifrada, Ruben puede descifrar el mensaje original usando AES-256-CBC, y guarda el mensaje en `mensaje_descifrado.txt`.
 
     ```bash
-    openssl enc -d -aes-256-cbc -in mensaje_cifrado.enc -out mensaje_descifrado.txt -pass file:clave_simetrica_bob.hex
+    openssl enc -d -aes-256-cbc -in mensaje_cifrado.enc -out mensaje_descifrado.txt -pass file:clave_simetrica_ruben.hex
     ```
 
 #### Verificar la firma del mensaje
 
-- Bob verifica la autenticidad del mensaje cifrado utilizando la clave pública de Alice (`alice_publica.pem`).
+- Ruben verifica la autenticidad del mensaje cifrado utilizando la clave pública de Bonilla (`bonilla_publica.pem`).
 
     ```bash
-    openssl dgst -sha256 -verify alice_publica.pem -signature firma_mensaje.bin mensaje_cifrado.enc
+    openssl dgst -sha256 -verify bonilla_publica.pem -signature firma_mensaje.bin mensaje_cifrado.enc
     ```
 
-- Si la firma es válida, Bob sabe que el mensaje fue enviado por Alice y no ha sido alterado.
+- Si la firma es válida, Ruben sabe que el mensaje fue enviado por Bonilla y no ha sido alterado.
 
