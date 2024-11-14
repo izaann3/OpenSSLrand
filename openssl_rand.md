@@ -1,4 +1,4 @@
-# Ejercicio Avanzado: Generación y Gestión de Claves para Cifrado y Firma Digital en un Sistema de Mensajería Segura
+# Generación y Gestión de Claves para Cifrado y Firma Digital en un Sistema de Mensajería Segura
 
 **Objetivo**: Implementar un sistema de mensajería segura utilizando claves criptográficas generadas con openssl rand. Aprenderemos a aplicar conceptos de criptografía simétrica y asimétrica, generación de claves seguras, y autenticación de mensajes.
 
