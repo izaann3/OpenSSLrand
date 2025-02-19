@@ -90,11 +90,3 @@ Somos parte del  equipo de seguridad de una empresa que necesita proteger su sis
     ```
 
 - Si la firma es válida, Ruben sabe que el mensaje fue enviado por Bonilla y no ha sido alterado.
-
-ssl_protocols TLSv1.2 TLSv1.3; 
-ssl_prefer_server_ciphers on; 
-ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
-ssl_session_cache shared:SSL:10m; 
-ssl_session_timeout 10m; 
-ssl_stapling on; 
-ssl_stapling_verify on;
